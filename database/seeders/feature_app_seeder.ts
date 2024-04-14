@@ -4,7 +4,11 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 
 export default class extends BaseSeeder {
   async run() {
-    await App.query().where({ code: 'VK' }).delete()
+    await App.query()
+      .whereExists(function (query) {
+        query.select('*').from('apps').where('code', 'VK')
+      })
+      .delete()
 
     const app = await App.create({
       code: 'VK',
